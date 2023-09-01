@@ -1,41 +1,56 @@
-type HangmanWordProps = {
-  guessedLetters: string[]
-  wordToGuess: string
-  reveal?: boolean
-}
+import React from 'react';
 
-export function HangmanWord({
+type HangmanWordProps = {
+  guessedLetters: string[];
+  wordToGuess: string;
+  reveal?: boolean;
+};
+
+const renderLetter = (
+  letter: string,
+  index: number,
+  guessedLetters: string[],
+  reveal: boolean
+) => {
+  const isGuessed = guessedLetters.includes(letter);
+  const isHidden = !isGuessed && reveal;
+  const textColor = isHidden ? 'red' : 'black';
+
+  return (
+    <span
+      key={index}
+      style={{
+        borderBottom: '.1em solid black',
+        visibility: isHidden ? 'visible' : 'hidden',
+        color: textColor,
+      }}
+    >
+      {letter}
+    </span>
+  );
+};
+
+const HangmanWord: React.FC<HangmanWordProps> = ({
   guessedLetters,
   wordToGuess,
   reveal = false,
-}: HangmanWordProps) {
+}) => {
   return (
     <div
       style={{
-        display: "flex",
-        gap: ".25em",
-        fontSize: "6rem",
-        fontWeight: "bold",
-        textTransform: "uppercase",
-        fontFamily: "monospace",
+        display: 'flex',
+        gap: '.25em',
+        fontSize: '6rem',
+        fontWeight: 'bold',
+        textTransform: 'uppercase',
+        fontFamily: 'monospace',
       }}
     >
-      {wordToGuess.split("").map((letter, index) => (
-        <span style={{ borderBottom: ".1em solid black" }} key={index}>
-          <span
-            style={{
-              visibility:
-                guessedLetters.includes(letter) || reveal
-                  ? "visible"
-                  : "hidden",
-              color:
-                !guessedLetters.includes(letter) && reveal ? "red" : "black",
-            }}
-          >
-            {letter}
-          </span>
-        </span>
-      ))}
+      {wordToGuess.split('').map((letter, index) =>
+        renderLetter(letter, index, guessedLetters, reveal)
+      )}
     </div>
-  )
-}
+  );
+};
+
+export default HangmanWord;
