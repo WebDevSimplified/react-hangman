@@ -6,30 +6,35 @@ type HangmanWordProps = {
   reveal?: boolean;
 };
 
+const renderLetter = (
+  letter: string,
+  index: number,
+  guessedLetters: string[],
+  reveal: boolean
+) => {
+  const isGuessed = guessedLetters.includes(letter);
+  const isHidden = !isGuessed && reveal;
+  const textColor = isHidden ? 'red' : 'black';
+
+  return (
+    <span
+      key={index}
+      style={{
+        borderBottom: '.1em solid black',
+        visibility: isHidden ? 'visible' : 'hidden',
+        color: textColor,
+      }}
+    >
+      {letter}
+    </span>
+  );
+};
+
 const HangmanWord: React.FC<HangmanWordProps> = ({
   guessedLetters,
   wordToGuess,
   reveal = false,
 }) => {
-  const renderLetter = (letter: string, index: number) => {
-    const isGuessed = guessedLetters.includes(letter);
-    const isHidden = !isGuessed && reveal;
-    const textColor = isHidden ? 'red' : 'black';
-
-    return (
-      <span
-        key={index}
-        style={{
-          borderBottom: '.1em solid black',
-          visibility: isHidden ? 'visible' : 'hidden',
-          color: textColor,
-        }}
-      >
-        {letter}
-      </span>
-    );
-  };
-
   return (
     <div
       style={{
@@ -41,7 +46,9 @@ const HangmanWord: React.FC<HangmanWordProps> = ({
         fontFamily: 'monospace',
       }}
     >
-      {wordToGuess.split('').map((letter, index) => renderLetter(letter, index))}
+      {wordToGuess.split('').map((letter, index) =>
+        renderLetter(letter, index, guessedLetters, reveal)
+      )}
     </div>
   );
 };
